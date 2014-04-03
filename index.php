@@ -10,9 +10,6 @@ headerContent();
 ?>
 </head>
 <body>
-<?php
-require_once("sanity-db.php");
-?>
   <form method="post" id="actionform">
     <div class="container">
       <!-- Static navbar -->
@@ -27,24 +24,6 @@ require_once("sanity-db.php");
           <a class="navbar-brand" href="index.php"><?php echo($CFG->servicename); ?></a>
         </div>
         <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <?php if ( $CFG->DEVELOPER ) { ?>
-            <li><a href="dev.php">Developer</a></li>
-            <?php } ?>
-            <?php if ( isset($_SESSION['id']) || $CFG->DEVELOPER ) { ?>
-            <li><a href="admin/upgrade.php" target="_blank">Admin</a></li>
-            <?php } ?>
-
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Links<b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="http://developers.imsglobal.org/" target="_blank">IMS LTI Documentation</a></li>
-				<li><a href="http://www.imsglobal.org/LTI/v1p1p1/ltiIMGv1p1p1.html" target="_new">IMS LTI 1.1 Spec</a></li>
-				<li><a href="https://vimeo.com/34168694" target="_new">IMS LTI Lecture</a></li>
-                <li><a href="http://www.oauth.net/" target="_blank">OAuth Documentation</a></li>
-              </ul>
-            </li>
-          </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="about.php">About</a></li>
             <?php if ( isset($_SESSION['id']) ) { ?>
@@ -65,12 +44,6 @@ require_once("sanity-db.php");
       <div>
 <?php
 flashMessages();
-if ( $CFG->DEVELOPER ) {
-    echo '<div class="alert alert-danger" style="margin-top: 10px;">'.
-        'Note: Currently this server is running in developer mode.'.
-        "\n</div>\n";
-}
-
 ?>
 <p>
 Hello and welcome to <b><?php echo($CFG->servicename); ?></b>.

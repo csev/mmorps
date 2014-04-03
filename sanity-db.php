@@ -83,19 +83,73 @@ target="_blank">https://github.com/csev/mmorps</a>');
     die();
 }   
 
-
-// Now check the plugins table to see if it exists
+// Check to see if the data tables have been created
 $p = $CFG->dbprefix;
-$plugins = "{$p}lms_plugins";
-$table_fields = pdoMetadata($pdo, $plugins);
+$table_fields = pdoMetadata($pdo, "{$p}user");
 if ( $table_fields === false ) {
+    error_log("Creating user table");
     echo('<div class="alert alert-danger" style="margin: 10px;">'."\n");
-    echo("<p>It appears that your database connection is working properly
-but you have no tables in your database.  To create the initial tables
-needed for this application, use the 'Admin' feature.  You will be prompted
-for the administrator master password as configured in <code>config.php</code>
-in the <code>\$CFG->adminpw</code> setting.
-</p>
-");
+    echo("<p>Creating user table</p>\n");
+    pdoQueryDie($pdo, 
+"create table {$CFG->dbprefix}user (
+    user_id             INTEGER NOT NULL AUTO_INCREMENT,
+    user_sha256         CHAR(64) NOT NULL,
+    user_key            VARCHAR(4096) NOT NULL,
+
+    admin               SMALLINT,
+
+    displayname         VARCHAR(2048) NULL,
+    email               VARCHAR(2048) NULL,
+    locale              CHAR(63) NULL,
+
+    map                 SMALLINT,
+    lat                 FLOAT NULL,
+    lng                 FLOAT NULL,
+
+    homepage            VARCHAR(1024) NULL,
+    blog                VARCHAR(1024) NULL,
+    avatar              VARCHAR(1024) NULL,
+    avatarlink          VARCHAR(1024) NULL,
+
+    json                TEXT NULL,
+    login_at            DATETIME NOT NULL,
+    login_ip            VARCHAR(999) NOT NULL,
+    created_at          DATETIME NOT NULL,
+    updated_at          DATETIME NOT NULL,
+
+    PRIMARY KEY (user_id)
+) ENGINE = InnoDB DEFAULT CHARSET=utf8");
     echo("\n</div>\n");
-}   
+}
+
+$table_fields = pdoMetadata($pdo, "{$p}rps");
+if ( $table_fields === false ) {
+    error_log("Creating rps table");
+    echo('<div class="alert alert-danger" style="margin: 10px;">'."\n");
+    echo("<p>Creating rps table</p>\n");
+    pdoQueryDie($pdo, 
+"create table {$CFG->dbprefix}rps (
+    rps_guid    VARCHAR(64) NOT NULL,
+    user1_id    INTEGER NOT NULL,
+    play1       INTEGER NOT NULL,
+    user2_id    INTEGER,
+    play2       INTEGER,
+    started_at  DATETIME NOT NULL,
+    finished_at DATETIME,
+
+    CONSTRAINT `{$CFG->dbprefix}rps_ibfk_2`
+        FOREIGN KEY (`user1_id`)
+        REFERENCES `{$CFG->dbprefix}user` (`user_id`)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+
+    CONSTRAINT `{$CFG->dbprefix}rps_ibfk_3`
+        FOREIGN KEY (`user2_id`)
+        REFERENCES `{$CFG->dbprefix}user` (`user_id`)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+
+    INDEX `{$CFG->dbprefix}rps_indx_1` USING HASH (`rps_guid`),
+    UNIQUE(rps_guid)
+) ENGINE = InnoDB DEFAULT CHARSET=utf8");
+    echo("\n</div>\n");
+}
+
