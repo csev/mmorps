@@ -6,6 +6,16 @@ require_once("lib/util.php");
 header('Content-Type: text/html; charset=utf-8');
 session_start();
 
+$admin = isset($_SESSION['admin']) && $_SESSION['admin'] == 1;
+// The reset operation is a normal POST - not AJAX
+if ( $admin && isset($_POST['reset']) ) {
+    $sql = "DELETE FROM {$p}rps WHERE link_id = :LI";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(array(':LI' => $LTI['link_id']));
+    header( 'Location: index.php') ;
+    return;
+}
+
 headerContent();
 ?>
 </head>
@@ -44,23 +54,121 @@ headerContent();
       <div>
 <?php
 flashMessages();
+
+if ( !isset($_SESSION['id']) ) {
+    echo("<p>Please log in to play RPS</p>");
+    echo("</div> <!-- container -->\n");
+    footerContent(); 
+    return;
+}
 ?>
 <p>
-Hello and welcome to <b><?php echo($CFG->servicename); ?></b>.
-Generally this system is used to provide cloud-hosted learning tools that are plugged
-into a Learning Management systems like Sakai, Coursera, or Blackboard using 
-IMS Learning Tools Interoperability.  You can sign in to this system 
-and create a profile and as you use tools from various courses you can 
-associate those tools and courses with your profile.
+<form id="rpsform" method="post">
+<input type="submit" id="rock" name="rock" value="Rock"/>
+<input type="submit" id="paper" name="paper" value="Paper"/>
+<input type="submit" id="scissors" name="scissors" value="Scissors"/>
+<?php if ( $admin ) { ?>
+<input type="submit" name="reset" value="Reset"/>
+<?php } ?>
+</form>
+<p id="error" style="color:red"></p>
+<p id="success" style="color:green"></p>
+<p id="status" style="display:none">
+<img id="spinner" src="spinner.gif">
+<span id="statustext" style="color:orange"></span>
 </p>
-<p>
-Other than logging in and setting up your profile, there is nothing much you can 
-do at this screen.  Things happen when your instructor starts using the tools
-hosted on this server in their LMS systems.  If you are an instructor and would
-like to experiment with these tools (it is early days) send a note to Dr. Chuck.
-You can look at the source code for this software at 
-<a href="https://github.com/csev/mmorps" target="_blank">https://github.com/csev/mmorps</a>.
+<div>
+<p><b>Leaderboard</b></p>
+<p id="leaders">
 </p>
-      </div> <!-- /container -->
+</div> <!-- /container -->
+<?php
+footerStart();
+?>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  window.console && console.log('Hello JQuery..');
+  $("#rock").click( function(event) { play(0); event.preventDefault(); } ) ;
+  $("#paper").click( function(event) { play(1); event.preventDefault(); } ) ;
+  $("#scissors").click( function(event) { play(2); event.preventDefault(); } ) ;
+});
 
-<?php footerContent(); 
+function play(strategy) {
+	$("#success").html("");
+	$("#error").html("");
+	$("#statustext").html("Playing...");
+	$("#rpsform input").attr("disabled", true);
+	$("#status").show();
+	window.console && console.log('Played '+strategy);
+	$.getJSON('play.php?play='+strategy, function(data) {
+		window.console && console.log(data);
+		if ( data.guid ) {
+			$("#statustext").html("Waiting for opponent...");
+			check(data.guid); // Start the checking process
+		} else {
+			$("#status").hide();
+			if ( data.tie ) {
+				$("#success").html("You tied "+data.displayname);
+			} else if ( data.win ) {
+				$("#success").html("You beat "+data.displayname);
+			} else { 
+				$("#success").html("You lost to "+data.displayname);
+			}
+			$("#rpsform input").attr("disabled", false);
+			leaders();  // Immediately update the leaderboard
+		}
+  });
+  return false;
+}
+
+var GLOBAL_GUID;
+function check(guid) {
+	GLOBAL_GUID = guid;
+	window.console && console.log('Checking game '+guid);
+	$.getJSON('play.php?game='+guid, function(data) {
+		window.console && console.log(data);
+		window.console && console.log(GLOBAL_GUID);
+		if ( ! data.displayname ) {
+			window.console && console.log("Need to wait some more...");
+			setTimeout('check("'+GLOBAL_GUID+'")', 4000);
+			return;
+		}
+		$("#status").hide();
+		if ( data.tie ) {
+			$("#success").html("You tied "+data.displayname);
+		} else if ( data.win ) {
+			$("#success").html("You beat "+data.displayname);
+		} else { 
+			$("#success").html("You lost to "+data.displayname);
+		}
+		$("#rpsform input").attr("disabled", false);
+		leaders();  // Immediately update the leaderboard
+  });
+}
+
+var OLD_TIMEOUT = false;
+function leaders() {
+	if ( OLD_TIMEOUT ) {
+		clearTimeout(OLD_TIMEOUT);
+		OLD_TIMEOUT = false;
+	}
+	window.console && console.log('Updating leaders...');
+	$.getJSON('stats.php', function(data) {
+		window.console && console.log(data);
+		$("#leaders").html("");
+		$("#leaders").append("<ol>\n");
+		for (var i = 0; i < data.length; i++) {
+			entry = data[i];
+			$("#leaders").append("<li>"+entry.name+' ('+entry.games+') score='+entry.score+"</li>\n");
+			console.log(data[i]);
+		}
+		$("#leaders").append("</ol>\n");
+		OLD_TIMEOUT = setTimeout('leaders()', 20000);
+  });
+}
+
+// Run for the first time
+leaders();
+</script>
+<?php
+footerEnd();
