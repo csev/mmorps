@@ -1,6 +1,5 @@
 <?php
 require_once "config.php";
-require_once "pdo.php";
 require_once 'lib/util.php';
 require_once 'lib/lightopenid/openid.php';
 
@@ -53,6 +52,7 @@ if ( $doLogin ) {
         header('Location: index.php');
         return;
     } else {
+        require_once "pdo.php";
         $userSHA = lti_sha256($identity);
         $displayName = $firstName . ' ' . $lastName;
 
