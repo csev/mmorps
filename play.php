@@ -37,7 +37,7 @@ if ( $play < 0 || $play > 2 ) {
 // Check to see if there is an open game
 $stmt = $pdo->prepare("SELECT rps_guid, play1, play2, displayname FROM {$p}rps 
 	LEFT JOIN {$p}user ON {$p}rps.user1_id = {$p}user.user_id
-	WHERE play2 IS NULL ORDER BY started_at ASC LIMIT 1");
+	WHERE play2 IS NULL ORDER BY started_at ASC LIMIT 1 FOR UPDATE");
 $stmt1 = $pdo->prepare("UPDATE {$p}rps SET user2_id = :U2ID, play2 = :PLAY
 	WHERE rps_guid = :GUID");
 
