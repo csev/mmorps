@@ -27,10 +27,14 @@ if ( isset($_POST['pair']) || isset($_POST['unpair']) ) {
 if ( isset($_POST['pair']) ) {
     $guid = uniqid();
     $rnum = rand(100000,999999);
-    $stmt = pdoQuery($pdo, "INSERT INTO {$p}pair 
+    $stmt = pdoQueryDie($pdo, "INSERT INTO {$p}pair 
         (pair_key, pair_guid, user_id, created_at) VALUES
         ( :PK, :PG, :UI, NOW() )",
         array(':UI' => $_SESSION['id'], ':PG' => $guid, ':PK' => $rnum));
+    if ( $stmt === false ) {
+        $_SESSION['error'] = "Unable to pair - please retry";
+        header("Location: pair.php");
+    }
 }
 
 if ( isset($_POST['pair']) || isset($_POST['unpair']) ) {

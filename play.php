@@ -3,9 +3,22 @@ require_once "config.php";
 require_once "pdo.php";
 require_once("lib/util.php");
 
-
-session_start();
 header('Content-type: application/json');
+
+$user_id = false;
+if ( isset($_GET['pair']) ) {
+    $row = pdoRowDie($pdo, "SELECT user_id FROM {$p}pair WHERE pair_key = :PK",
+        array(':PK' => $_GET['pair']) );
+    if ( $row !== false ) $user_id = $row['user_id'];
+} else {
+    session_start();
+    $user_id = $_SESSION['id'];
+}
+
+if ( $user_id === false ) {
+	echo('{ "error" : "Not logged in"}');
+    return;
+}
 
 $p = $CFG->dbprefix;
 if ( isset($_GET['game']) ) { // I am player 1 since I made this game
@@ -48,7 +61,7 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
 if ( $row == FALSE ) {
 	$pdo->rollBack();
 } else {
-	$stmt1->execute(array(":U2ID" => $_SESSION['id'], ":PLAY" => $play,
+	$stmt1->execute(array(":U2ID" => $user_id, ":PLAY" => $play,
 		":GUID" => $row['rps_guid']));
 	$pdo->commit();
 	$tie = $play == $row['play1'];
@@ -66,7 +79,7 @@ $stmt = $pdo->prepare("INSERT INTO {$p}rps
 	(rps_guid, user1_id, play1, started_at) 
 	VALUES ( :GUID, :UID, :PLAY, NOW() )");
 $stmt->execute(array(":GUID" => $guid, 
-	":UID" => $_SESSION['id'], ":PLAY" => $play));
+	":UID" => $user_id, ":PLAY" => $play));
 
 echo(json_encode(array("guid" => $guid)));
 
