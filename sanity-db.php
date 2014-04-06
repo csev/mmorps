@@ -153,3 +153,31 @@ if ( $table_fields === false ) {
     echo("\n</div>\n");
 }
 
+$table_fields = pdoMetadata($pdo, "{$p}pair");
+if ( $table_fields === false ) {
+    error_log("Creating pair table");
+    echo('<div class="alert alert-danger" style="margin: 10px;">'."\n");
+    echo("<p>Creating pair table</p>\n");
+    pdoQueryDie($pdo, 
+"create table {$CFG->dbprefix}pair (
+    pair_id     INTEGER NOT NULL AUTO_INCREMENT,
+    pair_key    INTEGER NULL,
+    pair_guid   VARCHAR(64) NOT NULL,
+    user_id     INTEGER NOT NULL,
+    created_at  DATETIME NOT NULL,
+    paired_at   DATETIME,
+
+    CONSTRAINT `{$CFG->dbprefix}pair_ibfk_2`
+        FOREIGN KEY (`user_id`)
+        REFERENCES `{$CFG->dbprefix}user` (`user_id`)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+
+    INDEX `{$CFG->dbprefix}pair_indx_1` USING HASH (`pair_guid`),
+
+    UNIQUE(pair_guid),
+    UNIQUE(pair_key),
+    PRIMARY KEY (pair_id)
+) ENGINE = InnoDB DEFAULT CHARSET=utf8");
+    echo("\n</div>\n");
+}
+

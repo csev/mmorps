@@ -41,6 +41,7 @@ headerContent();
               <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo($_SESSION['displayname']);?><b class="caret"></b></a>
               <ul class="dropdown-menu">
 				<li><a href="profile.php">Profile</a></li>
+				<li><a href="pair.php">Pair wih a Mobile Device</a></li>
 				<li><a href="logout.php">Logout</a></li>
               </ul>
             </li>
