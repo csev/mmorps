@@ -13,7 +13,7 @@ if ( isset($_GET['pair']) ) {
     if ( $row !== false ) $user_id = $row['user_id'];
 } else {
     session_start();
-    $user_id = $_SESSION['id'];
+    if ( isset($_SESSION['user_id']) ) $user_id = $_SESSION['id'];
 }
 
 if ( $user_id === false ) {
