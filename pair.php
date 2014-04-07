@@ -14,10 +14,12 @@ if ( !isset($_SESSION['id']) ) {
 }
 
 $p = $CFG->dbprefix;
+/* TODO afterwards...
 // Clean up old unfinished pairings
 $stmt = pdoQueryDie($pdo, 
     "DELETE FROM {$p}pair WHERE user_id IS NULL OR paired_at IS NULL 
         AND created_at < (NOW() - INTERVAL 20 MINUTE)");
+*/
 
 if ( isset($_POST['pair']) || isset($_POST['unpair']) ) {
     $stmt = pdoQueryDie($pdo, "DELETE FROM {$p}pair WHERE user_id = :UI",

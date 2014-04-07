@@ -52,7 +52,10 @@ while ( $row = $stmt->fetch(PDO::FETCH_ASSOC) ) {
 // Sort the scores in descending order and then dump the data
 arsort($scores);
 $results = array();
+$i = 0;
 foreach ( $scores as $k => $v ) {
 	$results[] = array("name" => $users[$k], "score" => $v, "games" => $games[$k]);
+    $i = $i + 1;
+    if ( $i > 20 ) break;
 }
 echo(json_encode($results));
