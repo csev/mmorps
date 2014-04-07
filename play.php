@@ -5,6 +5,7 @@ require_once("lib/util.php");
 
 header('Content-type: application/json');
 
+$p = $CFG->dbprefix;
 $user_id = false;
 if ( isset($_GET['pair']) ) {
     $row = pdoRowDie($pdo, "SELECT user_id FROM {$p}pair WHERE pair_key = :PK",
