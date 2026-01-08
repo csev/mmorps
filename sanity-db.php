@@ -6,16 +6,19 @@ try {
     require_once("pdo.php");
 } catch(PDOException $ex){
     $msg = $ex->getMessage();
-    error_log("DB connection: "+$msg);
+    error_log("DB connection: ".$msg);
     echo('<div class="alert alert-danger" style="margin: 10px;">'."\n");
     if ( strpos($msg, 'Unknown database') !== false ) {
         echo("<p>It does not appear as though your database exists.</p>
 <p> If you have full access to your MySql instance (i.e. like 
 MAMP or XAMPP, you may need to run commands like this:</p>
 <pre>
-    CREATE DATABASE mmorps DEFAULT CHARACTER SET utf8;
-    GRANT ALL ON mmorps.* TO 'mmouser'@'localhost' IDENTIFIED BY 'mmopassword';
-    GRANT ALL ON mmorps.* TO 'mmouser'@'127.0.0.1' IDENTIFIED BY 'mmopassword';
+    CREATE DATABASE IF NOT EXISTS mmorps DEFAULT CHARACTER SET utf8;
+    CREATE USER IF NOT EXISTS 'mmouser'@'localhost' IDENTIFIED BY 'mmopassword';
+    CREATE USER IF NOT EXISTS 'mmouser'@'127.0.0.1' IDENTIFIED BY 'mmopassword';
+    GRANT ALL ON mmorps.* TO 'mmouser'@'localhost';
+    GRANT ALL ON mmorps.* TO 'mmouser'@'127.0.0.1';
+    FLUSH PRIVILEGES;
 </pre>
 <p>Make sure to choose appropriate passwords when setting this up.</p>
 <p>If you are running in a hosted environment and are using an admin tool like
@@ -32,12 +35,15 @@ Once you have the database, account and password you must update your
         echo('<p>It appears that you are unable to access 
 your database due to a problem with the user and password.
 The user and password for the database conneciton are setup using either a 
-SQL <code>GRANT</code> command or created in an adminstration tool like CPanel.
+SQL <code>CREATE USER</code> and <code>GRANT</code> commands or created in an adminstration tool like CPanel.
 Here are sample commands to set up a database:'."
 <pre>
-    CREATE DATABASE mmorps DEFAULT CHARACTER SET utf8;
-    GRANT ALL ON mmorps.* TO 'mmouser'@'localhost' IDENTIFIED BY 'mmopassword';
-    GRANT ALL ON mmorps.* TO 'mmouser'@'127.0.0.1' IDENTIFIED BY 'mmopassword';
+    CREATE DATABASE IF NOT EXISTS mmorps DEFAULT CHARACTER SET utf8;
+    CREATE USER IF NOT EXISTS 'mmouser'@'localhost' IDENTIFIED BY 'mmopassword';
+    CREATE USER IF NOT EXISTS 'mmouser'@'127.0.0.1' IDENTIFIED BY 'mmopassword';
+    GRANT ALL ON mmorps.* TO 'mmouser'@'localhost';
+    GRANT ALL ON mmorps.* TO 'mmouser'@'127.0.0.1';
+    FLUSH PRIVILEGES;
 </pre>".'
 Or perhaps a system administrator created the database and gave you the
 account and password to access the database.</p>
@@ -112,6 +118,7 @@ if ( $table_fields === false ) {
     avatarlink          VARCHAR(1024) NULL,
 
     json                TEXT NULL,
+    provider            VARCHAR(50) NULL,
     login_at            DATETIME NOT NULL,
     login_ip            VARCHAR(999) NOT NULL,
     created_at          DATETIME NOT NULL,
@@ -120,6 +127,22 @@ if ( $table_fields === false ) {
     PRIMARY KEY (user_id)
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8");
     echo("\n</div>\n");
+}
+
+// Check if provider column exists, add it if missing (for existing installations)
+$table_fields = pdoMetadata($pdo, "{$p}user");
+if ($table_fields !== false) {
+    $has_provider = false;
+    foreach ($table_fields as $field) {
+        if (isset($field['Field']) && $field['Field'] === 'provider') {
+            $has_provider = true;
+            break;
+        }
+    }
+    if (!$has_provider) {
+        error_log("Adding provider column to user table");
+        pdoQueryDie($pdo, "ALTER TABLE {$CFG->dbprefix}user ADD COLUMN provider VARCHAR(50) NULL AFTER json");
+    }
 }
 
 $table_fields = pdoMetadata($pdo, "{$p}rps");

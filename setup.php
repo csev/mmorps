@@ -14,11 +14,11 @@ ini_set('display_errors', 1);
 date_default_timezone_set($CFG->timezone);
 
 function htmlspec_utf8($string) {
-    return htmlspecialchars($string,ENT_QUOTES,$encoding = 'UTF-8');
+    return htmlspecialchars($string,ENT_QUOTES,'UTF-8');
 }
 
 function htmlent_utf8($string) {
-    return htmlentities($string,ENT_QUOTES,$encoding = 'UTF-8');
+    return htmlentities($string,ENT_QUOTES,'UTF-8');
 }
 
 // Makes sure a string is safe as an href

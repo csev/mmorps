@@ -1,5 +1,25 @@
 <?php
 
+// Wrapper class for PDOStatement that allows dynamic properties
+class PDOStatementWrapper extends stdClass {
+    private $stmt;
+    
+    public function __construct($stmt = null) {
+        $this->stmt = $stmt;
+    }
+    
+    public function __call($method, $args) {
+        if ($this->stmt && method_exists($this->stmt, $method)) {
+            return call_user_func_array([$this->stmt, $method], $args);
+        }
+        return null;
+    }
+    
+    public function getStatement() {
+        return $this->stmt;
+    }
+}
+
 if ( defined('PDO_WILL_CATCH') ) {
     $pdo = new PDO($CFG->pdo, $CFG->dbuser, $CFG->dbpass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -8,7 +28,7 @@ if ( defined('PDO_WILL_CATCH') ) {
         $pdo = new PDO($CFG->pdo, $CFG->dbuser, $CFG->dbpass);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch(PDOException $ex){
-        error_log("DB connection: "+$ex->getMessage());
+        error_log("DB connection: ".$ex->getMessage());
         die($ex->getMessage());
     }
 }
@@ -58,14 +78,24 @@ function pdoQuery($pdo, $sql, $arr=FALSE, $error_log=TRUE) {
         $message = $e->getMessage();
         if ( $error_log ) error_log($message);
     }
-	if ( ! is_object($q) ) $q = stdClass();
+	if ( ! is_object($q) ) {
+        $q = new PDOStatementWrapper();
+        $errorCode = '42000';
+        $errorInfo = Array('42000', '42000', $message);
+    } else {
+        // Get error info from PDOStatement before wrapping
+        $errorCode = $q->errorCode();
+        $errorInfo = $q->errorInfo();
+        // Wrap PDOStatement to allow dynamic properties
+        $q = new PDOStatementWrapper($q);
+    }
     if ( isset( $q->success ) ) die("PDO::Statement should not have success member");
     $q->success = $success;
     if ( isset( $q->ellapsed_time ) ) die("PDO::Statement should not have ellapsed_time member");
     $q->ellapsed_time = microtime(true)-$start;
 	// In case we build this...
-    if ( !isset($q->errorCode) ) $q->errorCode = '42000';
-    if ( !isset($q->errorInfo) ) $q->errorInfo = Array('42000', '42000', $message);
+    if ( !isset($q->errorCode) ) $q->errorCode = $errorCode;
+    if ( !isset($q->errorInfo) ) $q->errorInfo = $errorInfo;
     if ( !isset($q->errorImplode) ) $q->errorImplode = implode(':',$q->errorInfo);
     // Restore ERRMODE if we changed it
 	if ( $errormode != PDO::ERRMODE_EXCEPTION) {
