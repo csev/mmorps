@@ -267,30 +267,61 @@ function cacheClear($cacheloc)
     unset($_SESSION[$cacheloc]);
 }
 
-require_once("crypt/aes.class.php"); 
-require_once("crypt/aesctr.class.php");
-
-/*
-  // initialise password & plaintesxt if not set in post array (shouldn't need stripslashes if magic_quotes is off)
-  $pw = 'L0ck it up saf3';
-  $pt = 'pssst ... đon’t tell anyøne!';
-  $encr = AesCtr::encrypt($pt, $pw, 256) ;
-  $decr = AesCtr::decrypt($encr, $pw, 256);
-  echo("E: ".$encr."\n");
-  echo("D: ".$decr."\n");
-*/
+// Using PHP's built-in OpenSSL encryption instead of custom AES classes
+// AES-256-CBC encryption with random IV for secure cookies
 
 function create_secure_cookie($id,$guid,$debug=false) {
     global $CFG;
     $pt = $CFG->cookiepad.'::'.$id.'::'.$guid;
     if ( $debug ) echo("PT1: $pt\n");
-    $ct = AesCtr::encrypt($pt, $CFG->cookiesecret, 256) ;
+    
+    // Generate a random IV (initialization vector) for each encryption
+    $iv_length = openssl_cipher_iv_length('AES-256-CBC');
+    $iv = openssl_random_pseudo_bytes($iv_length);
+    
+    // Derive a 32-byte key from the secret using SHA-256
+    $key = hash('sha256', $CFG->cookiesecret, true);
+    
+    // Encrypt the plaintext
+    $encrypted = openssl_encrypt($pt, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+    
+    // Prepend IV to encrypted data and base64 encode for safe storage
+    $ct = base64_encode($iv . $encrypted);
+    
     return $ct;
 }
 
 function extract_secure_cookie($encr,$debug=false) {
     global $CFG;
-    $pt = AesCtr::decrypt($encr, $CFG->cookiesecret, 256) ;
+    
+    // Decode from base64
+    $data = base64_decode($encr, true);
+    if ($data === false) {
+        if ( $debug ) echo("PT2: Invalid base64\n");
+        return false;
+    }
+    
+    // Extract IV (first 16 bytes for AES-256-CBC)
+    $iv_length = openssl_cipher_iv_length('AES-256-CBC');
+    if (strlen($data) < $iv_length) {
+        if ( $debug ) echo("PT2: Data too short\n");
+        return false;
+    }
+    
+    $iv = substr($data, 0, $iv_length);
+    $encrypted = substr($data, $iv_length);
+    
+    // Derive the same key from the secret
+    $key = hash('sha256', $CFG->cookiesecret, true);
+    
+    // Decrypt
+    $pt = openssl_decrypt($encrypted, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+    
+    if ($pt === false) {
+        if ( $debug ) echo("PT2: Decryption failed\n");
+        return false;
+    }
+    
     if ( $debug ) echo("PT2: $pt\n");
     $pieces = explode('::',$pt);
     if ( count($pieces) != 3 ) return false;
