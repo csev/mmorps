@@ -100,6 +100,11 @@ At least one OAuth provider must be configured for login to work. The applicatio
    $CFG->github_client_secret = 'your-client-secret';
    ```
 
+**Note:** If you want to test locally and also run in production, you need to create **two separate OAuth apps** in GitHub:
+- One for local development with callback URL: `http://localhost:8888/mmorps/login.php`
+- One for production with callback URL: `https://www.mmorps.com/login.php`
+Then update your `config.php` with the appropriate credentials for each environment.
+
 #### Patreon OAuth Setup
 
 1. Go to [Patreon Portal](https://www.patreon.com/portal/registration/register-clients)
