@@ -21,12 +21,20 @@ headerContent();
 ?>
 </head>
 <body>
+	
   <form method="post" id="actionform">
     <div class="container" style="position: relative;">
       <?php include('nav.php'); ?>
 
       <div>
+
+<div style="float: right; margin-left: 20px; vertical-align: top;">
+  <a href="about.php">
+    <img src="logo.png" alt="MMORPS Logo" style="max-width: 25vw; max-height: 150px; height: auto; width: auto; vertical-align: top;">
+  </a>
+</div>
 <?php
+
 flashMessages();
 
 if ( !isset($_SESSION['id']) ) {
@@ -37,11 +45,6 @@ if ( !isset($_SESSION['id']) ) {
 }
 ?>
 
-<div style="float: right; margin-left: 20px; vertical-align: top;">
-  <a href="about.php">
-    <img src="logo.png" alt="MMORPS Logo" style="max-width: 25vw; max-height: 150px; height: auto; width: auto; vertical-align: top;">
-  </a>
-</div>
 
 <p style="margin-top: 0;">
 <form id="rpsform" method="post">

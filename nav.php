@@ -24,6 +24,8 @@
 				<?php /* <li><a href="pair.php">Pair wih a Mobile Device</a></li> */ ?>
 				<li><a href="privacy.php">Privacy Policy</a></li>
 				<li><a href="service.php">Terms of Service</a></li>
+				<li role="separator" class="divider"></li>
+				<li><a href="delete.php">Delete All My Data</a></li>
 				<li><a href="logout.php">Logout</a></li>
             </ul>
           </li>
