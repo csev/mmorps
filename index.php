@@ -88,47 +88,150 @@ if ( !isset($_SESSION['id']) ) {
 footerStart();
 ?>
 <script type="text/javascript">
-$(document).ready(function(){ 
-  window.console && console.log('Hello JQuery..');
-  $("#rock").click( function(event) { play(0); event.preventDefault(); } ) ;
-  $("#paper").click( function(event) { play(1); event.preventDefault(); } ) ;
-  $("#scissors").click( function(event) { play(2); event.preventDefault(); } ) ;
+document.addEventListener('DOMContentLoaded', function() {
+  window.console && console.log('Hello Vanilla JS..');
+  
+  var rockBtn = document.getElementById('rock');
+  var paperBtn = document.getElementById('paper');
+  var scissorsBtn = document.getElementById('scissors');
+  
+  if (rockBtn) {
+    rockBtn.addEventListener('click', function(event) { 
+      event.preventDefault();
+      play(0); 
+    });
+  }
+  if (paperBtn) {
+    paperBtn.addEventListener('click', function(event) { 
+      event.preventDefault();
+      play(1); 
+    });
+  }
+  if (scissorsBtn) {
+    scissorsBtn.addEventListener('click', function(event) { 
+      event.preventDefault();
+      play(2); 
+    });
+  }
+  
+  // Bootstrap dropdown menu handler
+  var dropdownToggle = document.querySelector('.dropdown-toggle');
+  if (dropdownToggle) {
+    dropdownToggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      var dropdown = this.parentElement;
+      var menu = dropdown.querySelector('.dropdown-menu');
+      if (menu) {
+        var isOpen = dropdown.classList.contains('open');
+        // Close all dropdowns
+        document.querySelectorAll('.dropdown').forEach(function(d) {
+          d.classList.remove('open');
+        });
+        // Toggle this one
+        if (!isOpen) {
+          dropdown.classList.add('open');
+        }
+      }
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+      var clickedDropdown = false;
+      var el = e.target;
+      while (el && el !== document.body) {
+        if (el.classList && el.classList.contains('dropdown')) {
+          clickedDropdown = true;
+          break;
+        }
+        el = el.parentElement;
+      }
+      if (!clickedDropdown) {
+        document.querySelectorAll('.dropdown').forEach(function(d) {
+          d.classList.remove('open');
+        });
+      }
+    });
+  }
+  
+  // Bootstrap navbar collapse handler
+  var navbarToggle = document.querySelector('.navbar-toggle');
+  var navbarCollapse = document.querySelector('.navbar-collapse');
+  if (navbarToggle && navbarCollapse) {
+    navbarToggle.addEventListener('click', function() {
+      navbarCollapse.classList.toggle('collapse');
+      navbarCollapse.classList.toggle('in');
+    });
+  }
+  
+  // Run for the first time
+  leaders();
 });
 
 function play(strategy) {
-	$("#success").html("");
-	$("#error").html("");
-	$("#statustext").html("Playing...");
-	$("#rpsform input").attr("disabled", true);
-	$("#status").show();
+	var successEl = document.getElementById('success');
+	var errorEl = document.getElementById('error');
+	var statusTextEl = document.getElementById('statustext');
+	var statusEl = document.getElementById('status');
+	var formInputs = document.querySelectorAll('#rpsform input');
+	
+	if (successEl) successEl.innerHTML = "";
+	if (errorEl) errorEl.innerHTML = "";
+	if (statusTextEl) statusTextEl.innerHTML = "Playing...";
+	formInputs.forEach(function(input) {
+		input.disabled = true;
+	});
+	if (statusEl) statusEl.style.display = 'block';
+	
 	window.console && console.log('Played '+strategy);
-	$.getJSON('play.php?play='+strategy, function(data) {
-		window.console && console.log(data);
-		if ( data.guid ) {
-			$("#statustext").html("Waiting for opponent...");
-			check(data.guid); // Start the checking process
-		} else {
-			$("#status").hide();
-			if ( data.tie ) {
-				$("#success").html("You tied "+data.displayname);
-			} else if ( data.win ) {
-				$("#success").html("You beat "+data.displayname);
-			} else { 
-				$("#success").html("You lost to "+data.displayname);
+	
+	fetch('play.php?play='+strategy)
+		.then(function(response) {
+			return response.json();
+		})
+		.then(function(data) {
+			window.console && console.log(data);
+			if ( data.guid ) {
+				if (statusTextEl) statusTextEl.innerHTML = "Waiting for opponent...";
+				check(data.guid); // Start the checking process
+			} else {
+				if (statusEl) statusEl.style.display = 'none';
+				if (successEl) {
+					if ( data.tie ) {
+						successEl.innerHTML = "You tied "+data.displayname;
+					} else if ( data.win ) {
+						successEl.innerHTML = "You beat "+data.displayname;
+					} else { 
+						successEl.innerHTML = "You lost to "+data.displayname;
+					}
+				}
+				formInputs.forEach(function(input) {
+					input.disabled = false;
+				});
+				leaders();  // Immediately update the leaderboard
 			}
-			$("#rpsform input").attr("disabled", false);
-			leaders();  // Immediately update the leaderboard
-		}
-  });
-  return false;
+		})
+		.catch(function(error) {
+			window.console && console.error('Error:', error);
+			if (errorEl) errorEl.innerHTML = "Error playing game";
+			if (statusEl) statusEl.style.display = 'none';
+			formInputs.forEach(function(input) {
+				input.disabled = false;
+			});
+		});
+	
+	return false;
 }
 
 var GLOBAL_GUID;
 function check(guid) {
 	GLOBAL_GUID = guid;
 	window.console && console.log('Checking game '+guid);
-	$.getJSON('play.php?game='+guid)
-		.done(function(data) {
+	
+	fetch('play.php?game='+guid)
+		.then(function(response) {
+			return response.json();
+		})
+		.then(function(data) {
 			window.console && console.log(data);
 			window.console && console.log(GLOBAL_GUID);
 			if ( data.error ) {
@@ -142,20 +245,27 @@ function check(guid) {
 				setTimeout(function() { check(GLOBAL_GUID); }, 4000);
 				return;
 			}
-			$("#status").hide();
-			if ( data.tie ) {
-				$("#success").html("You tied "+data.displayname);
-			} else if ( data.win ) {
-				$("#success").html("You beat "+data.displayname);
-			} else { 
-				$("#success").html("You lost to "+data.displayname);
+			var statusEl = document.getElementById('status');
+			var successEl = document.getElementById('success');
+			var formInputs = document.querySelectorAll('#rpsform input');
+			
+			if (statusEl) statusEl.style.display = 'none';
+			if (successEl) {
+				if ( data.tie ) {
+					successEl.innerHTML = "You tied "+data.displayname;
+				} else if ( data.win ) {
+					successEl.innerHTML = "You beat "+data.displayname;
+				} else { 
+					successEl.innerHTML = "You lost to "+data.displayname;
+				}
 			}
-			$("#rpsform input").attr("disabled", false);
+			formInputs.forEach(function(input) {
+				input.disabled = false;
+			});
 			leaders();  // Immediately update the leaderboard
 		})
-		.fail(function(jqXHR, textStatus, errorThrown) {
-			window.console && console.log("AJAX error: " + textStatus + " - " + errorThrown);
-			// Retry after 4 seconds even on failure
+		.catch(function(error) {
+			window.console && console.error('Error:', error);
 			setTimeout(function() { check(GLOBAL_GUID); }, 4000);
 		});
 }
@@ -167,22 +277,31 @@ function leaders() {
 		OLD_TIMEOUT = false;
 	}
 	window.console && console.log('Updating leaders...');
-	$.getJSON('stats.php', function(data) {
-		window.console && console.log(data);
-		$("#leaders").html("");
-		$("#leaders").append("<ol>\n");
-		for (var i = 0; i < data.length; i++) {
-			entry = data[i];
-			$("#leaders").append("<li>"+entry.name+' - Wins: '+entry.wins+', Losses: '+entry.losses+' (Net: '+entry.score+')</li>\n');
-			console.log(data[i]);
-		}
-		$("#leaders").append("</ol>\n");
-		OLD_TIMEOUT = setTimeout('leaders()', 20000);
-  });
+	
+	fetch('stats.php')
+		.then(function(response) {
+			return response.json();
+		})
+		.then(function(data) {
+			window.console && console.log(data);
+			var leadersEl = document.getElementById('leaders');
+			if (leadersEl) {
+				leadersEl.innerHTML = "<ol>\n";
+				for (var i = 0; i < data.length; i++) {
+					var entry = data[i];
+					var li = document.createElement('li');
+					li.textContent = entry.name + ' - Wins: ' + entry.wins + ', Losses: ' + entry.losses + ' (Net: ' + entry.score + ')';
+					leadersEl.querySelector('ol').appendChild(li);
+					console.log(data[i]);
+				}
+			}
+			OLD_TIMEOUT = setTimeout(leaders, 20000);
+		})
+		.catch(function(error) {
+			window.console && console.error('Error:', error);
+			OLD_TIMEOUT = setTimeout(leaders, 20000);
+		});
 }
-
-// Run for the first time
-leaders();
 </script>
 <?php
 footerEnd();

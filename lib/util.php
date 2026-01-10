@@ -81,7 +81,6 @@ function headerContent($headCSS=false) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo($CFG->servicename); ?></title>
     <!-- Le styles -->
-    <link href="<?php echo($CFG->staticroot); ?>/static/jquery-ui-1.10.0.custom.css" rel="stylesheet">
     <link href="<?php echo($CFG->staticroot); ?>/static/bootstrap.min.css" rel="stylesheet">
     <link href="<?php echo($CFG->staticroot); ?>/static/bootstrap-theme.min.css" rel="stylesheet">
 
@@ -122,8 +121,7 @@ function startBody() {
 }
 function footerStart() {
     global $CFG;
-    echo('<script src="'.$CFG->staticroot.'/static/jquery-1.10.2.min.js"></script>'."\n");
-    echo('<script src="'.$CFG->staticroot.'/static/bootstrap.min.js"></script>'."\n");
+    // jQuery and Bootstrap JS removed - using vanilla JavaScript instead
 	do_analytics(); 
 }
 
