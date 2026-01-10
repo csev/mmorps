@@ -22,7 +22,7 @@ headerContent();
 </head>
 <body>
   <form method="post" id="actionform">
-    <div class="container">
+    <div class="container" style="position: relative;">
       <!-- Static navbar -->
       <div class="navbar navbar-default" role="navigation">
         <div class="navbar-header">
@@ -66,7 +66,14 @@ if ( !isset($_SESSION['id']) ) {
     return;
 }
 ?>
-<p>
+
+<div style="float: right; margin-left: 20px; vertical-align: top;">
+  <a href="about.php">
+    <img src="logo.png" alt="MMORPS Logo" style="max-width: 25vw; max-height: 150px; height: auto; width: auto; vertical-align: top;">
+  </a>
+</div>
+
+<p style="margin-top: 0;">
 <form id="rpsform" method="post">
 <input type="submit" id="rock" name="rock" value="Rock"/>
 <input type="submit" id="paper" name="paper" value="Paper"/>
