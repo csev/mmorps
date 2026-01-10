@@ -1,7 +1,7 @@
 <?php
 require_once "config.php";
 require_once 'lib/util.php';
-require_once 'pdo.php';
+require_once("sanity-db.php");
 
 session_start();
 
@@ -214,7 +214,6 @@ if ($doLogin) {
 headerContent();
 startBody();
 flashMessages();
-require_once("sanity-db.php");
 ?>
 <div style="margin: 15px">
 <?php if ($errormsg) { ?>
