@@ -54,6 +54,10 @@ if ( isset($_GET['game']) ) { // I am player 1 since I made this game
 		$elapsed = $current_time - $started_at;
 		
 		if ( $elapsed >= 10 ) {
+			// Clean up old records (more than 10 minutes old)
+			$cleanup_stmt = $pdo->prepare("DELETE FROM {$p}rps WHERE started_at < DATE_SUB(NOW(), INTERVAL 10 MINUTE)");
+			$cleanup_stmt->execute();
+			
 			// Game expired - assign biased random play for opponent
 			// Get win bias from config (default 5.0 means 5% more likely to win)
 			$win_bias = isset($CFG->random_opponent_win_bias) ? $CFG->random_opponent_win_bias : 5.0;
