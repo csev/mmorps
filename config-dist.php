@@ -45,29 +45,33 @@ $CFG->adminpw = 'short';
 
 // OAuth 2.0 credentials for login providers (Google, GitHub, Patreon)
 // At least one provider must be configured for login to work.
-// Get these credentials from:
-//   Google: https://console.cloud.google.com/apis/credentials
-//   GitHub: https://github.com/settings/developers
-//   Patreon: https://www.patreon.com/portal/registration/register-clients
 //
 // IMPORTANT: Set the redirect/callback URL to: {your-wwwroot}/login.php
 // For example: http://localhost:8888/mmorps/login.php
+//
+// Get OAuth credentials from these URLs:
+//   Google:   https://console.cloud.google.com/apis/credentials
+//   GitHub:   https://github.com/settings/developers
+//   Patreon:  https://www.patreon.com/portal/registration/register-clients
 
 // Google OAuth 2.0
-// Create OAuth 2.0 credentials in Google Cloud Console
-// Set authorized redirect URI to: {your-wwwroot}/login.php
+// 1. Go to: https://console.cloud.google.com/apis/credentials
+// 2. Create a new OAuth 2.0 Client ID
+// 3. Set authorized redirect URI to: {your-wwwroot}/login.php
 // $CFG->google_client_id = 'your-google-client-id.apps.googleusercontent.com';
 // $CFG->google_client_secret = 'your-google-client-secret';
 
 // GitHub OAuth 2.0
-// Create a new OAuth App in GitHub Settings > Developer settings
-// Set Authorization callback URL to: {your-wwwroot}/login.php
+// 1. Go to: https://github.com/settings/developers
+// 2. Click "New OAuth App"
+// 3. Set Authorization callback URL to: {your-wwwroot}/login.php
 // $CFG->github_client_id = 'your-github-client-id';
 // $CFG->github_client_secret = 'your-github-client-secret';
 
 // Patreon OAuth 2.0
-// Register a new client in Patreon Portal
-// Set Redirect URI to: {your-wwwroot}/login.php
+// 1. Go to: https://www.patreon.com/portal/registration/register-clients
+// 2. Register a new client
+// 3. Set Redirect URI to: {your-wwwroot}/login.php
 // $CFG->patreon_client_id = 'your-patreon-client-id';
 // $CFG->patreon_client_secret = 'your-patreon-client-secret';
 
