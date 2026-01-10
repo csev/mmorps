@@ -11,40 +11,7 @@ headerContent();
 </head>
 <body>
   <div class="container">
-    <!-- Static navbar -->
-    <div class="navbar navbar-default" role="navigation">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="index.php"><?php echo($CFG->servicename); ?></a>
-      </div>
-      <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="about.php">About</a></li>
-          <?php if ( isset($_SESSION['id']) ) { ?>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo($_SESSION['displayname']);?><b class="caret"></b></a>
-            <ul class="dropdown-menu">
-				<li><a href="profile.php">Profile</a></li>
-				<?php /* <li><a href="pair.php">Pair wih a Mobile Device</a></li> */ ?>
-				<?php if (isset($CFG->patreon_link) && !empty($CFG->patreon_link)) { ?>
-				<li><a href="<?php echo htmlspecialchars($CFG->patreon_link); ?>" target="_blank">Support on Patreon</a></li>
-				<?php } ?>
-				<li><a href="privacy.php">Privacy Policy</a></li>
-				<li><a href="service.php">Terms of Service</a></li>
-				<li><a href="logout.php">Logout</a></li>
-            </ul>
-          </li>
-          <?php } else { ?>
-          <li><a href="login.php">Login</a></li>
-          <?php } ?>
-        </ul>
-      </div><!--/.nav-collapse -->
-    </div>
+    <?php include('nav.php'); ?>
 
     <div>
 <?php
@@ -72,7 +39,20 @@ flashMessages();
 <h2>Learn More</h2>
 <p>For more online courses and educational resources, visit <a href="https://online.dr-chuck.com" target="_blank">online.dr-chuck.com</a>.</p>
 
-<p><a href="index.php">Back to Game</a></p>
+<?php if ((isset($CFG->patreon_link) && !empty($CFG->patreon_link)) || (isset($CFG->github_sponsors_link) && !empty($CFG->github_sponsors_link))) { ?>
+<h2>Support This Project</h2>
+<p>
+<?php if (isset($CFG->patreon_link) && !empty($CFG->patreon_link)) { ?>
+  <a href="<?php echo htmlspecialchars($CFG->patreon_link); ?>" target="_blank">Support on Patreon</a>
+<?php } ?>
+<?php if ((isset($CFG->patreon_link) && !empty($CFG->patreon_link)) && (isset($CFG->github_sponsors_link) && !empty($CFG->github_sponsors_link))) { ?>
+  | 
+<?php } ?>
+<?php if (isset($CFG->github_sponsors_link) && !empty($CFG->github_sponsors_link)) { ?>
+  <a href="<?php echo htmlspecialchars($CFG->github_sponsors_link); ?>" target="_blank">Sponsor on GitHub</a>
+<?php } ?>
+</p>
+<?php } ?>
 
     </div> <!-- /container -->
 <?php
