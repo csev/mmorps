@@ -274,12 +274,14 @@ function exchangeCodeForToken($config, $code) {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json'));
     
-    // GitHub requires different content type
-    if (strpos($config['token_url'], 'github.com') !== false) {
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json'));
+    // Set headers based on provider
+    $headers = array('Accept: application/json');
+    if (strpos($config['token_url'], 'patreon.com') !== false) {
+        // Patreon requires Content-Type header
+        $headers[] = 'Content-Type: application/x-www-form-urlencoded';
     }
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     
     $response = curl_exec($ch);
     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -296,7 +298,14 @@ function exchangeCodeForToken($config, $code) {
 
 // Helper function to get user info from provider
 function getUserInfo($config, $access_token, $provider) {
-    $ch = curl_init($config['userinfo_url']);
+    // Build the URL - Patreon API v2 requires fields parameter
+    $url = $config['userinfo_url'];
+    if ($provider === 'patreon') {
+        // Patreon API v2 requires fields parameter to specify which attributes to return
+        $url .= '?fields%5Buser%5D=email,full_name,first_name,last_name';
+    }
+    
+    $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
         'Authorization: Bearer ' . $access_token,
@@ -340,12 +349,40 @@ function getUserInfo($config, $access_token, $provider) {
                 }
             }
         } elseif ($provider === 'patreon') {
-            $result['identity'] = $user_data['data']['id'];
-            $result['email'] = isset($user_data['data']['attributes']['email']) ? $user_data['data']['attributes']['email'] : '';
-            $name = isset($user_data['data']['attributes']['full_name']) ? $user_data['data']['attributes']['full_name'] : '';
-            $name_parts = explode(' ', $name, 2);
-            $result['first_name'] = $name_parts[0];
-            $result['last_name'] = isset($name_parts[1]) ? $name_parts[1] : '';
+            // Log the response for debugging
+            error_log('Patreon API Response: ' . json_encode($user_data));
+            
+            if (isset($user_data['data']['id'])) {
+                $result['identity'] = $user_data['data']['id'];
+            }
+            
+            if (isset($user_data['data']['attributes'])) {
+                $attrs = $user_data['data']['attributes'];
+                
+                // Try to get email
+                if (isset($attrs['email'])) {
+                    $result['email'] = $attrs['email'];
+                }
+                
+                // Try to get first_name and last_name separately first
+                if (isset($attrs['first_name'])) {
+                    $result['first_name'] = $attrs['first_name'];
+                }
+                if (isset($attrs['last_name'])) {
+                    $result['last_name'] = $attrs['last_name'];
+                }
+                
+                // Fallback to full_name if first_name/last_name not available
+                if (empty($result['first_name']) && isset($attrs['full_name'])) {
+                    $name = $attrs['full_name'];
+                    $name_parts = explode(' ', $name, 2);
+                    $result['first_name'] = $name_parts[0];
+                    $result['last_name'] = isset($name_parts[1]) ? $name_parts[1] : '';
+                }
+            }
+            
+            // Log what we extracted for debugging
+            error_log('Patreon Extracted: identity=' . $result['identity'] . ', email=' . $result['email'] . ', first_name=' . $result['first_name'] . ', last_name=' . $result['last_name']);
         }
         
         return $result;
