@@ -58,7 +58,7 @@ if ( !isset($_SESSION['id']) ) {
 <p id="error" style="color:red"></p>
 <p id="success" style="color:green"></p>
 <p id="status" style="display:none">
-<img id="spinner" src="spinner.gif">
+<img id="spinner" src="<?php echo($CFG->staticroot); ?>/static/spinner.gif">
 <span id="statustext" style="color:orange"></span>
 </p>
 <div>
