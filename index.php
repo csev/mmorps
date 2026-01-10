@@ -3,8 +3,8 @@ include_once("config.php");
 require_once("sanity.php");
 require_once("lib/util.php");
 
-header('Content-Type: text/html; charset=utf-8');
 session_start();
+
 
 $admin = isset($_SESSION['admin']) && $_SESSION['admin'] == 1;
 // The reset operation is a normal POST - not AJAX
@@ -126,25 +126,37 @@ var GLOBAL_GUID;
 function check(guid) {
 	GLOBAL_GUID = guid;
 	window.console && console.log('Checking game '+guid);
-	$.getJSON('play.php?game='+guid, function(data) {
-		window.console && console.log(data);
-		window.console && console.log(GLOBAL_GUID);
-		if ( ! data.displayname ) {
-			window.console && console.log("Need to wait some more...");
-			setTimeout('check("'+GLOBAL_GUID+'")', 4000);
-			return;
-		}
-		$("#status").hide();
-		if ( data.tie ) {
-			$("#success").html("You tied "+data.displayname);
-		} else if ( data.win ) {
-			$("#success").html("You beat "+data.displayname);
-		} else { 
-			$("#success").html("You lost to "+data.displayname);
-		}
-		$("#rpsform input").attr("disabled", false);
-		leaders();  // Immediately update the leaderboard
-  });
+	$.getJSON('play.php?game='+guid)
+		.done(function(data) {
+			window.console && console.log(data);
+			window.console && console.log(GLOBAL_GUID);
+			if ( data.error ) {
+				window.console && console.log("Error: " + data.error);
+				// Retry after 4 seconds even on error
+				setTimeout(function() { check(GLOBAL_GUID); }, 4000);
+				return;
+			}
+			if ( ! data.displayname ) {
+				window.console && console.log("Need to wait some more...");
+				setTimeout(function() { check(GLOBAL_GUID); }, 4000);
+				return;
+			}
+			$("#status").hide();
+			if ( data.tie ) {
+				$("#success").html("You tied "+data.displayname);
+			} else if ( data.win ) {
+				$("#success").html("You beat "+data.displayname);
+			} else { 
+				$("#success").html("You lost to "+data.displayname);
+			}
+			$("#rpsform input").attr("disabled", false);
+			leaders();  // Immediately update the leaderboard
+		})
+		.fail(function(jqXHR, textStatus, errorThrown) {
+			window.console && console.log("AJAX error: " + textStatus + " - " + errorThrown);
+			// Retry after 4 seconds even on failure
+			setTimeout(function() { check(GLOBAL_GUID); }, 4000);
+		});
 }
 
 var OLD_TIMEOUT = false;
