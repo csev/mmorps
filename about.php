@@ -31,6 +31,9 @@ headerContent();
             <ul class="dropdown-menu">
 				<li><a href="profile.php">Profile</a></li>
 				<?php /* <li><a href="pair.php">Pair wih a Mobile Device</a></li> */ ?>
+				<?php if (isset($CFG->patreon_link) && !empty($CFG->patreon_link)) { ?>
+				<li><a href="<?php echo htmlspecialchars($CFG->patreon_link); ?>" target="_blank">Support on Patreon</a></li>
+				<?php } ?>
 				<li><a href="privacy.php">Privacy Policy</a></li>
 				<li><a href="service.php">Terms of Service</a></li>
 				<li><a href="logout.php">Logout</a></li>

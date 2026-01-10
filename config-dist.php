@@ -75,6 +75,11 @@ $CFG->adminpw = 'short';
 // $CFG->patreon_client_id = 'your-patreon-client-id';
 // $CFG->patreon_client_secret = 'your-patreon-client-secret';
 
+// Patreon Link
+// If set, a link to your Patreon page will appear in the user dropdown menu
+// Example: $CFG->patreon_link = 'https://www.patreon.com/yourusername';
+// $CFG->patreon_link = false;
+
 // When this is true it enables a Developer test harness that can launch
 // tools using LTI.  It allows quick testing without setting up an LMS 
 // course, etc.
