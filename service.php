@@ -74,7 +74,7 @@ flashMessages();
 <p>In order to be in line with Fair Information Practices, we will take the following responsive action should a data breach occur: We will notify you via email.</p>
 
 <h2>Contact Information</h2>
-<pre><code>C Programming for Everybody (cc4e.com)
+<pre><code>MMO Rock Paper Scissors (mmorps.com)
 c/o Learning Experiences (learnxp.com)
 2190 Aurelius Rd. Unit 175
 Holt MI 48842-9998

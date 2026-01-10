@@ -59,7 +59,7 @@ flashMessages();
   <li>Game statistics (wins, losses, games played)</li>
 </ul>
 
-<p><strong>OAuth Authentication:</strong> When you log in using Google OAuth, Google shares your basic profile information (name, email address) with us. We use this information solely to create and maintain your account on this service. We do not share this information with third parties except as necessary to provide the service.</p>
+<p><strong>OAuth Authentication:</strong> When you log in using OAuth, Your OAuth provider shares your basic profile information (name, email address) with us. We use this information solely to create and maintain your account on this service. We do not share this information with third parties except as necessary to provide the service.</p>
 
 <h2>When do we collect information?</h2>
 <p>We collect information from you when you register on our site using OAuth authentication or when you play games on our platform.</p>
@@ -110,7 +110,7 @@ flashMessages();
 <p>We actively expire inactive data based on a schedule. When data expires or is manually removed, this service does not retain a copy of the data. By only keeping active data in the system, we reduce the overall amount of 'Personally Identifiable Information' (PII) on the system at any time.</p>
 
 <h2>Data Analysis</h2>
-<p>We will limit our analysis of PII data to reports requested by the customer or reports that are necessary for accounting, technical support, and overall statistics for the system. We may do internal data analysis to improve the technical reliability, functionality, or performance of the system.</p>
+<p>We will limit our analysis of PII data to reports that are necessary for accounting, technical support, and overall statistics for the system. We may do internal data analysis to improve the technical reliability, functionality, or performance of the system.</p>
 
 <h2>General Philosophy</h2>
 <p>It is often said that if you are not paying for a service, then you are the product. For this service, you are not the product and your data/activity is not the product. We retain only as much of your data as is needed to accomplish your gaming goals and for no other purpose. Wherever possible, we give you control over the retention of your data and respect your wishes with respect to the retention of your data.</p>
@@ -122,7 +122,7 @@ flashMessages();
 
 <h2>Contact Information</h2>
 <p>If there are any questions regarding this privacy policy, you may contact us using the information below:</p>
-<pre><code>C Programming for Everybody (cc4e.com)
+<pre><code>MMO Rock Paper Scissors (mmorps.com)
 c/o Learning Experiences (learnxp.com)
 2190 Aurelius Rd. Unit 175
 Holt MI 48842-9998
