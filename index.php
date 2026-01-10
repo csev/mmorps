@@ -43,6 +43,8 @@ headerContent();
               <ul class="dropdown-menu">
 				<li><a href="profile.php">Profile</a></li>
 				<?php /* <li><a href="pair.php">Pair wih a Mobile Device</a></li> */ ?>
+				<li><a href="privacy.php">Privacy Policy</a></li>
+				<li><a href="service.php">Terms of Service</a></li>
 				<li><a href="logout.php">Logout</a></li>
               </ul>
             </li>

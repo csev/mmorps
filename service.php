@@ -31,8 +31,6 @@ headerContent();
             <ul class="dropdown-menu">
 				<li><a href="profile.php">Profile</a></li>
 				<?php /* <li><a href="pair.php">Pair wih a Mobile Device</a></li> */ ?>
-				<li><a href="privacy.php">Privacy Policy</a></li>
-				<li><a href="service.php">Terms of Service</a></li>
 				<li><a href="logout.php">Logout</a></li>
             </ul>
           </li>
@@ -48,26 +46,41 @@ headerContent();
 flashMessages();
 ?>
 
-<h1>About MMORPS</h1>
+<h1>Terms of Service</h1>
 
-<p>MMORPS (Massively Multiplayer Online Rock Paper Scissors) is an online game platform where players from around the world can compete in classic Rock-Paper-Scissors matches. Challenge your friends, test your strategy, and climb the leaderboard!</p>
+<p>This is a highly reliable, scalable and secure cloud-based service, but outages may occur. Since there are no fees for this service, there is no formal service level agreement. If you are having issues with the performance or reliability of this site, please contact us.</p>
 
-<h2>How It Works</h2>
-<p>When you play a game, you select Rock, Paper, or Scissors. The system will match you with another player who has also chosen to play. If no opponent is available within 10 seconds, you'll be matched with a random opponent so you can always complete your game.</p>
+<p>This site cares greatly about protecting anyone who uses these servers. Please review our <a href="privacy.php">Privacy Policy</a> for more details.</p>
 
-<p>Your wins and losses are tracked, and you can see how you rank against other players on the leaderboard. The leaderboard is sorted by your net score (wins minus losses), so consistent players rise to the top!</p>
+<h2>Account Registration</h2>
+<p>To use this service, you must register for an account using OAuth authentication providers such as Google, GitHub, or Patreon. By registering, you agree to provide accurate and complete information. You are responsible for maintaining the security of your account credentials.</p>
 
-<h2>Features</h2>
+<h2>User Conduct</h2>
+<p>You agree to use this service only for lawful purposes and in a way that does not infringe the rights of others or restrict their use of the service. You agree not to:</p>
 <ul>
-  <li>Real-time multiplayer gameplay</li>
-  <li>Automatic matchmaking with other players</li>
-  <li>Win/loss tracking and statistics</li>
-  <li>Live leaderboard showing top players</li>
-  <li>Simple, fast-paced gameplay</li>
+  <li>Attempt to gain unauthorized access to the service or other users' accounts</li>
+  <li>Interfere with or disrupt the service or servers</li>
+  <li>Use automated systems to access the service without permission</li>
+  <li>Engage in any activity that violates applicable laws or regulations</li>
 </ul>
 
-<h2>Learn More</h2>
-<p>For more online courses and educational resources, visit <a href="https://online.dr-chuck.com" target="_blank">online.dr-chuck.com</a>.</p>
+<h2>Service Availability</h2>
+<p>We strive to maintain high availability, but we do not guarantee uninterrupted access to the service. We reserve the right to modify, suspend, or discontinue any part of the service at any time with or without notice.</p>
+
+<h2>Limitation of Liability</h2>
+<p>This service is provided "as is" without warranties of any kind. We are not liable for any damages arising from your use of or inability to use the service.</p>
+
+<h2>Notifications</h2>
+<p>In order to be in line with Fair Information Practices, we will take the following responsive action should a data breach occur: We will notify you via email.</p>
+
+<h2>Contact Information</h2>
+<pre><code>C Programming for Everybody (cc4e.com)
+c/o Learning Experiences (learnxp.com)
+2190 Aurelius Rd. Unit 175
+Holt MI 48842-9998
+United States</code></pre>
+
+<p>Last edited: <?php echo date('d-M-Y'); ?></p>
 
 <p><a href="index.php">Back to Game</a></p>
 
