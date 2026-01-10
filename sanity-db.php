@@ -123,6 +123,8 @@ if ( $table_fields === false ) {
     login_ip            VARCHAR(999) NOT NULL,
     created_at          DATETIME NOT NULL,
     updated_at          DATETIME NOT NULL,
+    wins                INTEGER DEFAULT 0,
+    losses              INTEGER DEFAULT 0,
 
     PRIMARY KEY (user_id)
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8");
@@ -133,15 +135,30 @@ if ( $table_fields === false ) {
 $table_fields = pdoMetadata($pdo, "{$p}user");
 if ($table_fields !== false) {
     $has_provider = false;
+    $has_wins = false;
+    $has_losses = false;
     foreach ($table_fields as $field) {
         if (isset($field['Field']) && $field['Field'] === 'provider') {
             $has_provider = true;
-            break;
+        }
+        if (isset($field['Field']) && $field['Field'] === 'wins') {
+            $has_wins = true;
+        }
+        if (isset($field['Field']) && $field['Field'] === 'losses') {
+            $has_losses = true;
         }
     }
     if (!$has_provider) {
         error_log("Adding provider column to user table");
         pdoQueryDie($pdo, "ALTER TABLE {$CFG->dbprefix}user ADD COLUMN provider VARCHAR(50) NULL AFTER json");
+    }
+    if (!$has_wins) {
+        error_log("Adding wins column to user table");
+        pdoQueryDie($pdo, "ALTER TABLE {$CFG->dbprefix}user ADD COLUMN wins INTEGER DEFAULT 0 AFTER updated_at");
+    }
+    if (!$has_losses) {
+        error_log("Adding losses column to user table");
+        pdoQueryDie($pdo, "ALTER TABLE {$CFG->dbprefix}user ADD COLUMN losses INTEGER DEFAULT 0 AFTER wins");
     }
 }
 

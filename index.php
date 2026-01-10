@@ -3,6 +3,7 @@ include_once("config.php");
 require_once("sanity.php");
 require_once("lib/util.php");
 
+header('Content-Type: text/html; charset=utf-8');
 session_start();
 
 
@@ -41,7 +42,7 @@ headerContent();
               <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo($_SESSION['displayname']);?><b class="caret"></b></a>
               <ul class="dropdown-menu">
 				<li><a href="profile.php">Profile</a></li>
-				<li><a href="pair.php">Pair wih a Mobile Device</a></li>
+				<?php /* <li><a href="pair.php">Pair wih a Mobile Device</a></li> */ ?>
 				<li><a href="logout.php">Logout</a></li>
               </ul>
             </li>
@@ -172,7 +173,7 @@ function leaders() {
 		$("#leaders").append("<ol>\n");
 		for (var i = 0; i < data.length; i++) {
 			entry = data[i];
-			$("#leaders").append("<li>"+entry.name+' ('+entry.games+') score='+entry.score+"</li>\n");
+			$("#leaders").append("<li>"+entry.name+' - Wins: '+entry.wins+', Losses: '+entry.losses+' (Net: '+entry.score+')</li>\n');
 			console.log(data[i]);
 		}
 		$("#leaders").append("</ol>\n");

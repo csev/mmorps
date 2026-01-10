@@ -98,6 +98,12 @@ $CFG->cookiepad = '390b426ea9';
 $CFG->analytics_key = false;  // "UA-423997-16";
 $CFG->analytics_name = false; // "dr-chuck.com";
 
+// Random opponent win bias percentage
+// This makes wins against random opponents X% more likely than losses
+// Example: 5.0 means wins are 5% more likely (52.5% win, 47.5% loss)
+// Set to 0 for completely random (50/50)
+$CFG->random_opponent_win_bias = 5.0;
+
 // The path to config.php (this file).  This should not be changed.  
 // It allows files to reference library files with an absolute path.
 $CFG->dirroot = realpath(dirname(__FILE__));
