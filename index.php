@@ -22,7 +22,6 @@ headerContent();
 </head>
 <body>
 	
-  <form method="post" id="actionform">
     <div class="container" style="position: relative;">
       <?php include('nav.php'); ?>
 
@@ -39,7 +38,8 @@ flashMessages();
 
 if ( !isset($_SESSION['id']) ) {
     echo("<p>Please log in to play RPS</p>");
-    echo("</div> <!-- container -->\n");
+    echo("      </div> <!-- inner div -->\n");
+    echo("    </div> <!-- container -->\n");
     footerContent(); 
     return;
 }
@@ -55,6 +55,7 @@ if ( !isset($_SESSION['id']) ) {
 <input type="submit" name="reset" value="Reset"/>
 <?php } ?>
 </form>
+</p>
 <p id="error" style="color:red"></p>
 <p id="success" style="color:green"></p>
 <p id="status" style="display:none">
@@ -65,7 +66,9 @@ if ( !isset($_SESSION['id']) ) {
 <p><b>Leaderboard</b></p>
 <p id="leaders">
 </p>
-</div> <!-- /container -->
+</div>
+      </div> <!-- inner div -->
+    </div> <!-- container -->
 <?php
 footerStart();
 ?>
@@ -135,15 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // Bootstrap navbar collapse handler
-  var navbarToggle = document.querySelector('.navbar-toggle');
-  var navbarCollapse = document.querySelector('.navbar-collapse');
-  if (navbarToggle && navbarCollapse) {
-    navbarToggle.addEventListener('click', function() {
-      navbarCollapse.classList.toggle('collapse');
-      navbarCollapse.classList.toggle('in');
-    });
-  }
+  // Navbar collapse handler is in nav.php and works on all pages
   
   // Run for the first time
   leaders();

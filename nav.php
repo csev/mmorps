@@ -5,7 +5,7 @@
     <!-- Static navbar -->
     <div class="navbar navbar-default" role="navigation">
       <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <button type="button" class="navbar-toggle">
           <span class="sr-only">Toggle navigation</span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
@@ -15,7 +15,7 @@
       </div>
       <div class="navbar-collapse collapse">
         <!-- Wide screen navigation (dropdown) -->
-        <ul class="nav navbar-nav navbar-right hidden-xs">
+        <ul class="nav navbar-nav navbar-right nav-wide">
           <li><a href="about.php">About</a></li>
           <?php if ( isset($_SESSION['id']) ) { ?>
           <li class="dropdown">
@@ -35,7 +35,7 @@
           <?php } ?>
         </ul>
         <!-- Narrow screen navigation (flat list) -->
-        <ul class="nav navbar-nav navbar-right visible-xs">
+        <ul class="nav navbar-nav navbar-right nav-narrow">
           <li><a href="about.php">About</a></li>
           <?php if ( isset($_SESSION['id']) ) { ?>
 				<?php /* <li><a href="profile.php">Profile</a></li> */ ?>
@@ -51,3 +51,38 @@
         </ul>
       </div><!--/.nav-collapse -->
     </div>
+<script type="text/javascript">
+// Navbar collapse handler - works on all pages
+(function() {
+  function initNavbarCollapse() {
+    var navbarToggle = document.querySelector('.navbar-toggle');
+    var navbarCollapse = document.querySelector('.navbar-collapse');
+    if (navbarToggle && navbarCollapse) {
+      // Remove any existing listeners by cloning
+      var newToggle = navbarToggle.cloneNode(true);
+      navbarToggle.parentNode.replaceChild(newToggle, navbarToggle);
+      
+      newToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var collapse = document.querySelector('.navbar-collapse');
+        if (collapse) {
+          collapse.classList.toggle('collapse');
+          collapse.classList.toggle('in');
+        }
+      });
+    } else {
+      // If elements not found, try again after a short delay
+      setTimeout(initNavbarCollapse, 100);
+    }
+  }
+  
+  // Always wait for DOM to be ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNavbarCollapse);
+  } else {
+    // Use setTimeout to ensure DOM is fully parsed
+    setTimeout(initNavbarCollapse, 0);
+  }
+})();
+</script>

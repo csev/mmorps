@@ -100,22 +100,64 @@ body {
   margin-bottom: 20px;
 }
 
-/* Align narrow screen menu items to right margin (under hamburger) */
+/* Show/hide navigation based on screen size */
 @media (max-width: 767px) {
-  .navbar-nav.visible-xs {
-    text-align: right;
+  .navbar-nav.nav-wide {
+    display: none !important;
   }
-  .navbar-nav.visible-xs > li {
-    display: block;
-    text-align: right;
+  /* Ensure collapse container is visible when expanded */
+  .navbar-collapse.collapse.in,
+  .navbar-collapse.collapse.collapsing {
+    display: block !important;
   }
-  .navbar-nav.visible-xs > li > a {
+  /* Force nav-narrow to be visible when collapse is expanded */
+  .navbar-collapse.in .navbar-nav.nav-narrow,
+  .navbar-collapse.collapsing .navbar-nav.nav-narrow {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  .navbar-nav.nav-narrow {
+    text-align: right;
+    margin: 7.5px -15px !important;
+  }
+  /* Ensure list items are visible when parent collapse is expanded */
+  .navbar-collapse.in .navbar-nav.nav-narrow > li,
+  .navbar-collapse.collapsing .navbar-nav.nav-narrow > li {
+    display: list-item !important;
+    text-align: right;
+    float: none !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  /* Ensure links are visible */
+  .navbar-collapse.in .navbar-nav.nav-narrow > li > a,
+  .navbar-collapse.collapsing .navbar-nav.nav-narrow > li > a {
     padding-right: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     text-align: right;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
-  .navbar-nav.visible-xs > li.divider {
+  /* Ensure divider is visible */
+  .navbar-collapse.in .navbar-nav.nav-narrow > li.divider,
+  .navbar-collapse.collapsing .navbar-nav.nav-narrow > li.divider {
     margin-right: 15px;
     margin-left: 15px;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .navbar-nav.nav-narrow {
+    display: none !important;
+  }
+  .navbar-nav.nav-wide {
+    display: block !important;
   }
 }
 </style>
