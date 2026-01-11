@@ -39,6 +39,12 @@ flashMessages();
 <h2>Learn More</h2>
 <p>For more online courses and educational resources, visit <a href="https://online.dr-chuck.com" target="_blank">online.dr-chuck.com</a>.</p>
 
+<h2>Legal</h2>
+<p>
+  <a href="privacy.php">Privacy Policy</a> | 
+  <a href="service.php">Terms of Service</a>
+</p>
+
 <?php if ((isset($CFG->patreon_link) && !empty($CFG->patreon_link)) || (isset($CFG->github_sponsors_link) && !empty($CFG->github_sponsors_link))) { ?>
 <h2>Support This Project</h2>
 <p>
