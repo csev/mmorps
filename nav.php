@@ -23,9 +23,6 @@
             <ul class="dropdown-menu">
 				<?php /* <li><a href="profile.php">Profile</a></li> */ ?>
 				<?php /* <li><a href="pair.php">Pair wih a Mobile Device</a></li> */ ?>
-				<li><a href="privacy.php">Privacy Policy</a></li>
-				<li><a href="service.php">Terms of Service</a></li>
-				<li role="separator" class="divider"></li>
 				<li><a href="delete.php">Delete All My Data</a></li>
 				<li><a href="logout.php">Logout</a></li>
             </ul>
@@ -40,9 +37,6 @@
           <?php if ( isset($_SESSION['id']) ) { ?>
 				<?php /* <li><a href="profile.php">Profile</a></li> */ ?>
 				<?php /* <li><a href="pair.php">Pair wih a Mobile Device</a></li> */ ?>
-				<li><a href="privacy.php">Privacy Policy</a></li>
-				<li><a href="service.php">Terms of Service</a></li>
-				<li role="separator" class="divider"></li>
 				<li><a href="delete.php">Delete All My Data</a></li>
 				<li><a href="logout.php">Logout</a></li>
           <?php } else { ?>
