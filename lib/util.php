@@ -89,6 +89,8 @@ function headerContent($headCSS=false) {
     <!-- Le styles -->
     <link href="<?php echo($CFG->staticroot); ?>/static/bootstrap.min.css" rel="stylesheet">
     <link href="<?php echo($CFG->staticroot); ?>/static/bootstrap-theme.min.css" rel="stylesheet">
+    <!-- Common JavaScript -->
+    <script src="<?php echo($CFG->staticroot); ?>/static/common.js"></script>
 
 <style> <!-- from navbar.css -->
 body {
