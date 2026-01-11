@@ -99,15 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // Bootstrap navbar collapse handler
-  var navbarToggle = document.querySelector('.navbar-toggle');
-  var navbarCollapse = document.querySelector('.navbar-collapse');
-  if (navbarToggle && navbarCollapse) {
-    navbarToggle.addEventListener('click', function() {
-      navbarCollapse.classList.toggle('collapse');
-      navbarCollapse.classList.toggle('in');
-    });
-  }
+  // Navbar collapse handler is in nav.php and works on all pages
 });
 </script>
 <?php
