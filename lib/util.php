@@ -99,6 +99,25 @@ body {
 .navbar {
   margin-bottom: 20px;
 }
+
+/* Align narrow screen menu items to right margin (under hamburger) */
+@media (max-width: 767px) {
+  .navbar-nav.visible-xs {
+    text-align: right;
+  }
+  .navbar-nav.visible-xs > li {
+    display: block;
+    text-align: right;
+  }
+  .navbar-nav.visible-xs > li > a {
+    padding-right: 15px;
+    text-align: right;
+  }
+  .navbar-nav.visible-xs > li.divider {
+    margin-right: 15px;
+    margin-left: 15px;
+  }
+}
 </style>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
