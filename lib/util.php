@@ -79,7 +79,7 @@ function headerContent($headCSS=false) {
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo($CFG->servicename); ?> - Massively Multi Player Online Rock Paper Scissors</title>
+    <title><?php echo($CFG->servicename); ?>Massively Multi Player Online Rock Paper Scissors</title>
     <!-- Favicons -->
     <link rel="icon" type="image/x-icon" href="<?php echo($CFG->wwwroot); ?>/favicon.ico">
     <link rel="icon" type="image/png" sizes="16x16" href="<?php echo($CFG->wwwroot); ?>/favicon_io/favicon-16x16.png">
