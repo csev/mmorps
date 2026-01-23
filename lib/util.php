@@ -79,7 +79,7 @@ function headerContent($headCSS=false) {
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo($CFG->servicename); ?>Massively Multi Player Online Rock Paper Scissors</title>
+    <title><?php echo($CFG->servicename); ?></title>
     <!-- Favicons -->
     <link rel="icon" type="image/x-icon" href="<?php echo($CFG->wwwroot); ?>/favicon.ico">
     <link rel="icon" type="image/png" sizes="16x16" href="<?php echo($CFG->wwwroot); ?>/favicon_io/favicon-16x16.png">
@@ -195,6 +195,12 @@ function footerStart() {
 }
 
 function footerEnd() {
+    // Add footer with privacy link when not logged in
+    if (!isset($_SESSION['id'])) {
+        echo("\n<div class=\"container\" style=\"text-align: center; padding: 20px; margin-top: 40px; border-top: 1px solid #ddd;\">\n");
+        echo("<p style=\"margin: 0; color: #666;\"><a href=\"privacy.php\">Privacy Policy</a></p>\n");
+        echo("</div>\n");
+    }
     echo("\n</body>\n</html>\n");
 }
 
